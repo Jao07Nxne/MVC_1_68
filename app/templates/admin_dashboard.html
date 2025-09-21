@@ -2,6 +2,33 @@
 
 {% block title %}Dashboard แอดมิน - ระบบรับสมัครงาน{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Override สีฟอนต์สำหรับ admin cards */
+    .admin-card h1, 
+    .admin-card h2, 
+    .admin-card h3, 
+    .admin-card h4, 
+    .admin-card h5, 
+    .admin-card h6,
+    .admin-card p,
+    .admin-card .card-body {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    .admin-card .btn {
+        font-weight: 500 !important;
+    }
+    
+    /* สำหรับ cards สถิติด้านบน */
+    .card h3,
+    .card p {
+        color: #000000 !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
     <div class="row">
@@ -88,7 +115,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <div class="card border-primary">
+                            <div class="card border-primary admin-card">
                                 <div class="card-body text-center">
                                     <i class="fas fa-eye fa-3x text-primary mb-3"></i>
                                     <h6>ดูข้อมูลระบบ</h6>
@@ -100,25 +127,25 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div class="card border-success">
+                            <div class="card border-success admin-card">
                                 <div class="card-body text-center">
                                     <i class="fas fa-chart-bar fa-3x text-success mb-3"></i>
                                     <h6>รายงานระบบ</h6>
-                                    <button class="btn btn-success btn-sm" disabled>
+                                    <a href="{{ url_for('main.admin_reports') }}" class="btn btn-secondary btn-sm">
                                         รายงานสถิติ
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div class="card border-warning">
+                            <div class="card border-warning admin-card">
                                 <div class="card-body text-center">
                                     <i class="fas fa-cog fa-3x text-warning mb-3"></i>
                                     <h6>ตั้งค่าระบบ</h6>
-                                    <button class="btn btn-warning btn-sm" disabled>
+                                    <a href="{{ url_for('main.admin_settings') }}" class="btn btn-secondary btn-sm">
                                         การตั้งค่า
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

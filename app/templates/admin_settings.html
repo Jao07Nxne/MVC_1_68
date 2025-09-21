@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}ตั้งค่าระบบ - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-cog text-warning"></i> ตั้งค่าระบบ</h1>
+            <p class="text-muted">จัดการการตั้งค่าและกำหนดค่าระบบ</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.admin_dashboard') }}">Dashboard แอดมิน</a></li>
+                    <li class="breadcrumb-item active">ตั้งค่าระบบ</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ข้อมูลระบบ -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> ข้อมูลระบบ</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>เวอร์ชัน:</strong></td>
+                            <td>{{ system_info.version }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ฐานข้อมูล:</strong></td>
+                            <td>{{ system_info.database }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Framework:</strong></td>
+                            <td>Flask 2.3.3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Python:</strong></td>
+                            <td>3.8+</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0"><i class="fas fa-users"></i> สถิติผู้ใช้งาน</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>ผู้ใช้ทั้งหมด:</strong></td>
+                            <td><span class="badge bg-primary">{{ system_info.total_users }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ผู้ดูแลระบบ:</strong></td>
+                            <td><span class="badge bg-danger">{{ system_info.admin_users }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>บัญชีบริษัท:</strong></td>
+                            <td><span class="badge bg-info">{{ system_info.company_users }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ผู้สมัครงาน:</strong></td>
+                            <td><span class="badge bg-success">{{ system_info.regular_users }}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- การตั้งค่าระบบ -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0"><i class="fas fa-tools"></i> การจัดการระบบ</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- ฐานข้อมูล -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-database fa-3x text-info mb-3"></i>
+                                    <h6 class="text-dark">จัดการฐานข้อมูล</h6>
+                                    <p class="text-muted small">สำรองข้อมูล และ Maintenance</p>
+                                    <button class="btn btn-info btn-sm" onclick="showBackupModal()">
+                                        <i class="fas fa-download"></i> สำรองข้อมูล
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ผู้ใช้งาน -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-cog fa-3x text-success mb-3"></i>
+                                    <h6 class="text-dark">จัดการผู้ใช้งาน</h6>
+                                    <p class="text-muted small">เพิ่ม ลบ แก้ไขบัญชีผู้ใช้</p>
+                                    <button class="btn btn-success btn-sm" onclick="showUserModal()">
+                                        <i class="fas fa-users"></i> จัดการผู้ใช้
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- การตั้งค่าทั่วไป -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-sliders-h fa-3x text-warning mb-3"></i>
+                                    <h6 class="text-dark">การตั้งค่าทั่วไป</h6>
+                                    <p class="text-muted small">กำหนดค่าพื้นฐานของระบบ</p>
+                                    <button class="btn btn-warning btn-sm" onclick="showSettingsModal()">
+                                        <i class="fas fa-cog"></i> ตั้งค่า
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ข้อมูลการพัฒนา -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0"><i class="fas fa-code"></i> ข้อมูลการพัฒนา</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> หมายเหตุ</h6>
+                        <ul class="mb-0">
+                            <li>ระบบนี้เป็น <strong>Version 1.0.0</strong> ในขั้นตอนการพัฒนา</li>
+                            <li>ฟีเจอร์บางส่วนอาจยังไม่สมบูรณ์</li>
+                            <li>สามารถติดตาม Roadmap ได้ที่ <a href="https://github.com/Jao07Nxne/MVC_1_68" target="_blank">GitHub Repository</a></li>
+                        </ul>
+                    </div>
+                    
+                    <h6>🚧 Roadmap การพัฒนา</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-success">✅ Version 1.0 (Current)</h6>
+                            <ul class="text-success">
+                                <li>ระบบ MVC Architecture</li>
+                                <li>Multi-role Authentication</li>
+                                <li>Job Management System</li>
+                                <li>Modern UI Design</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-warning">🔄 Version 1.1 (Coming Soon)</h6>
+                            <ul class="text-muted">
+                                <li>File Upload for CV</li>
+                                <li>Email Notifications</li>
+                                <li>Advanced Search</li>
+                                <li>Report Export</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ปุ่มกลับ -->
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ url_for('main.admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> กลับไป Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal สำหรับแสดงข้อความ -->
+<div class="modal fade" id="featureModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">ฟีเจอร์ยังไม่พร้อมใช้งาน</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    ฟีเจอร์นี้จะพร้อมใช้งานใน Version 1.1 
+                    <br><small>กรุณารอการอัปเดตในเร็วๆ นี้</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showBackupModal() {
+    document.getElementById('modalTitle').textContent = 'สำรองข้อมูล';
+    document.getElementById('modalBody').innerHTML = `
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            ฟีเจอร์การสำรองข้อมูลจะพร้อมใช้งานใน Version 1.1
+            <br><small>ขณะนี้ข้อมูลจะถูกเก็บไว้ใน SQLite Database</small>
+        </div>
+    `;
+    new bootstrap.Modal(document.getElementById('featureModal')).show();
+}
+
+function showUserModal() {
+    document.getElementById('modalTitle').textContent = 'จัดการผู้ใช้งาน';
+    document.getElementById('modalBody').innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            ฟีเจอร์การจัดการผู้ใช้งานขั้นสูงจะพร้อมใช้งานใน Version 1.1
+            <br><small>ขณะนี้สามารถดูข้อมูลผู้ใช้ได้ในส่วนสถิติ</small>
+        </div>
+    `;
+    new bootstrap.Modal(document.getElementById('featureModal')).show();
+}
+
+function showSettingsModal() {
+    document.getElementById('modalTitle').textContent = 'การตั้งค่าทั่วไป';
+    document.getElementById('modalBody').innerHTML = `
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            การตั้งค่าพื้นฐานของระบบ:
+            <ul class="mt-2 mb-0">
+                <li>ระบบใช้ Orange Theme (#E35205)</li>
+                <li>ภาษาไทยเป็นหลัก</li>
+                <li>Timezone: Asia/Bangkok (UTC+7)</li>
+                <li>Database: SQLite</li>
+            </ul>
+        </div>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            การตั้งค่าขั้นสูงจะพร้อมใช้งานใน Version 1.1
+        </div>
+    `;
+    new bootstrap.Modal(document.getElementById('featureModal')).show();
+}
+</script>
+{% endblock %}

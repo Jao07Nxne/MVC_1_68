@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}รายงานระบบ - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-chart-bar text-success"></i> รายงานระบบ</h1>
+            <p class="text-muted">รายงานและสถิติการใช้งานระบบ</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.admin_dashboard') }}">Dashboard แอดมิน</a></li>
+                    <li class="breadcrumb-item active">รายงานระบบ</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- สถิติรวม -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-briefcase fa-2x mb-2"></i>
+                    <h3>{{ report_data.total_stats.total_jobs }}</h3>
+                    <p class="mb-0">ตำแหน่งงานทั้งหมด</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-building fa-2x mb-2"></i>
+                    <h3>{{ report_data.total_stats.total_companies }}</h3>
+                    <p class="mb-0">บริษัทในระบบ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h3>{{ report_data.total_stats.total_candidates }}</h3>
+                    <p class="mb-0">ผู้สมัครทั้งหมด</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt fa-2x mb-2"></i>
+                    <h3>{{ report_data.total_stats.total_applications }}</h3>
+                    <p class="mb-0">ใบสมัครทั้งหมด</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- สถิติล่าสุด (30 วัน) -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> สถิติ 30 วันล่าสุด</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h4 class="text-primary">{{ report_data.recent_stats.recent_jobs }}</h4>
+                            <small>งานใหม่</small>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h4 class="text-success">{{ report_data.recent_stats.recent_applications }}</h4>
+                            <small>การสมัครใหม่</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-chart-pie"></i> สถิติตามประเภทงาน</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h4 class="text-primary">{{ report_data.job_type_stats.regular_jobs }}</h4>
+                            <small>งานปกติ</small>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h4 class="text-warning">{{ report_data.job_type_stats.internship_jobs }}</h4>
+                            <small>สหกิจศึกษา</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- สถิติการสมัครงาน -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-toggle-on"></i> สถานะตำแหน่งงาน</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h4 class="text-success">{{ report_data.job_status_stats.open_jobs }}</h4>
+                            <small>เปิดรับสมัคร</small>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h4 class="text-danger">{{ report_data.job_status_stats.closed_jobs }}</h4>
+                            <small>ปิดรับสมัคร</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-tasks"></i> สถานะการสมัคร</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4 text-center">
+                            <h5 class="text-warning">{{ report_data.application_status_stats.pending }}</h5>
+                            <small>รอพิจารณา</small>
+                        </div>
+                        <div class="col-4 text-center">
+                            <h5 class="text-success">{{ report_data.application_status_stats.approved }}</h5>
+                            <small>ผ่าน</small>
+                        </div>
+                        <div class="col-4 text-center">
+                            <h5 class="text-danger">{{ report_data.application_status_stats.rejected }}</h5>
+                            <small>ไม่ผ่าน</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- บริษัทที่มีงานมากที่สุด -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-trophy"></i> บริษัทที่มีตำแหน่งงานมากที่สุด (Top 5)</h6>
+                </div>
+                <div class="card-body">
+                    {% if report_data.top_companies %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>อันดับ</th>
+                                        <th>ชื่อบริษัท</th>
+                                        <th>สถานที่</th>
+                                        <th class="text-center">จำนวนตำแหน่ง</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for company, job_count in report_data.top_companies %}
+                                        <tr>
+                                            <td>
+                                                {% if loop.index == 1 %}
+                                                    <i class="fas fa-trophy text-warning"></i>
+                                                {% elif loop.index == 2 %}
+                                                    <i class="fas fa-medal text-secondary"></i>
+                                                {% elif loop.index == 3 %}
+                                                    <i class="fas fa-award text-warning"></i>
+                                                {% else %}
+                                                    {{ loop.index }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ company.company_name }}</td>
+                                            <td>{{ company.location }}</td>
+                                            <td class="text-center">
+                                                <span class="badge bg-primary">{{ job_count }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> ยังไม่มีข้อมูลบริษัท
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ปุ่มกลับ -->
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ url_for('main.admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> กลับไป Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

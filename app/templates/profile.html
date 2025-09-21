@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}โปรไฟล์ของฉัน - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-user"></i> ข้อมูลโปรไฟล์</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>ชื่อผู้ใช้:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.username }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>ชื่อ:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.first_name or '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>นามสกุล:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.last_name or '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>อีเมล:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.email or '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>บทบาท:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {% if user.user_type == 'admin' %}
+                                <span class="badge bg-danger">ผู้ดูแลระบบ</span>
+                            {% elif user.user_type == 'company' %}
+                                <span class="badge bg-primary">บริษัท</span>
+                            {% else %}
+                                <span class="badge bg-success">ผู้ใช้ทั่วไป</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if user.candidate %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>สถานะ:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.candidate.status or '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>เกรดเฉลี่ย:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ "%.2f"|format(user.candidate.gpa) if user.candidate.gpa else '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>ข้อมูลการศึกษา:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.candidate.education or '-' }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>ทักษะ:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.candidate.skills or '-' }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>วันที่สมัครสมาชิก:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ user.created_at.strftime('%d/%m/%Y %H:%M') if user.created_at else '-' }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> กลับ
+                        </a>
+                        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> แก้ไขโปรไฟล์
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

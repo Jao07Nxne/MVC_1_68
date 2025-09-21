@@ -1,53 +1,256 @@
-# 🚀 CS Job Fair (Job Recruitment System)
+# 🚀 CS Job Fair - ระบบรับสมัครงาน (Job Recruitment System)
 
 ## 📋 รายละเอียดโปรเจกต์
 
-ระบบรับสมัครงานออนไลน์ที่พัฒนาด้วย Python Flask ตามแนวทาง MVC Architecture รองรับการจัดการตำแหน่งงานและสหกิจศึกษาสำหรับบริษัทและผู้สมัครงาน
+ระบบรับสมัครงานออนไลน์ที่พัฒนาด้วย **Python Flask** ตามแนวทาง **MVC Architecture** รองรับการจัดการตำแหน่งงานและสหกิจศึกษาสำหรับบริษัทและผู้สมัครงาน พร้อม Modern UI/UX ด้วย Bootstrap 5
 
-**เวอร์ชัน:** 1.0.0  
-**สถานะ:** Development (🔄 อยู่ในขั้นตอนพัฒนาต่อเนื่อง)
+**🏷️ เวอร์ชัน:** 1.1 
+**📊 สถานะ:** Production Ready  
+**🗂️ Repository:** https://github.com/Jao07Nxne/MVC_1_68
 
-## ✨ ฟีเจอร์หลัก
+---
+
+## ✨ ฟีเจอร์หลัก (Version 1.1)
 
 ### 👥 ระบบผู้ใช้งาน (Multi-Role Authentication)
-- **Admin** - จัดการระบบทั้งหมด
-- **Company** - โพสต์งาน จัดการใบสมัคร
-- **User/Candidate** - สมัครงาน ติดตามสถานะ
+- **🔴 Admin** - จัดการระบบทั้งหมด, รายงานสถิติ, การตั้งค่า
+- **🔵 Company** - โพสต์งาน, จัดการใบสมัคร, อัพเดทสถานะ
+- **🟢 User/Candidate** - สมัครงาน, ติดตามสถานะ, จัดการโปรไฟล์
 
 ### 💼 การจัดการตำแหน่งงาน
-- โพสต์ตำแหน่งงานปกติและสหกิจศึกษา
-- กรองและค้นหาตำแหน่งงาน
+- โพสต์ตำแหน่ง**งานปกติ** (สำหรับผู้จบการศึกษา)
+- โพสต์ตำแหน่ง**สหกิจศึกษา** (สำหรับนักศึกษา)
+- กรองและค้นหาตามประเภทงาน
 - การแสดงวันคงเหลือแบบ Real-time
-- ระบบสถานะการเปิด/ปิดรับสมัคร
+- ระบบสถานะการเปิด/ปิดรับสมัครอัตโนมัติ
 
 ### 📝 ระบบสมัครงาน
-- สมัครงานออนไลน์
-- ติดตามสถานะใบสมัคร
-- ประวัติการสมัครงาน
-- ระบบแจ้งเตือน
+- สมัครงานออนไลน์ตามคุณสมบัติ (กำลังศึกษา/จบแล้ว)
+- ติดตามสถานะใบสมัคร (รอดำเนินการ/อนุมัติ/ปฏิเสธ)
+- ประวัติการสมัครงานแบบครบถ้วน
+- Dashboard แยกตาม Role พร้อมสถิติ
+
+### 👤 ระบบโปรไฟล์
+- แสดงข้อมูลโปรไฟล์ผู้ใช้
+- แก้ไขข้อมูลส่วนตัว (ชื่อ, นามสกุล, อีเมล, สถานะ)
+- เมนูโปรไฟล์ใน Navbar
+
+### 📊 ระบบรายงาน (Admin Only)
+- สถิติตำแหน่งงานและใบสมัคร
+- การวิเคราะห์ข้อมูลผู้ใช้
+- รายงานบริษัทและผู้สมัครยอดนิยม
 
 ### 🎨 Modern UI/UX
-- ออกแบบด้วย Bootstrap 5
-- Color Scheme: Orange (#E35205) เป็นสีหลัก
-- Responsive Design
-- Thai Typography (Kanit + Sarabun fonts)
-- Modern Card-based Layout
+- **Orange Theme** (#E35205) เป็นสีหลัก
+- **Bootstrap 5** พร้อม Custom CSS
+- **Responsive Design** รองรับทุกอุปกรณ์
+- **Thai Typography** (Kanit + Sarabun fonts)
+
+---
 
 ## 🏗️ สถาปัตยกรรม (MVC Architecture)
 
 ```
 📦 MVC_1_68/
 ├── 📂 app/
-│   ├── 📂 models/           # MODEL: ข้อมูลและ Business Logic
+│   ├── 📂 models/           # 🗂️ MODEL: Data & Business Logic
 │   │   ├── company.py       # โมเดลบริษัท
-│   │   ├── job.py          # โมเดลตำแหน่งงาน
+│   │   ├── job.py          # โมเดลตำแหน่งงาน  
 │   │   ├── candidate.py    # โมเดลผู้สมัคร
-│   │   ├── user.py         # โมเดลผู้ใช้
-│   │   └── application.py  # โมเดลใบสมัคร
+│   │   ├── user.py         # โมเดลผู้ใช้ (Authentication)
+│   │   ├── application.py  # โมเดลใบสมัคร
+│   │   └── seed_data.py    # ข้อมูลตัวอย่าง
 │   │
-│   ├── 📂 controllers/      # CONTROLLER: จัดการ Request/Response
-│   │   ├── main_controller.py    # หน้าหลัก
-│   │   ├── auth_controller.py    # ล็อกอิน/ลงทะเบียน
+│   ├── 📂 controllers/      # 🎮 CONTROLLER: Request/Response
+│   │   ├── main_controller.py    # หน้าหลัก, Dashboard, โปรไฟล์
+│   │   ├── auth_controller.py    # ล็อกอิน, ลงทะเบียน
+│   │   └── job_controller.py     # งาน, ใบสมัคร
+│   │
+│   └── 📂 templates/        # 🎨 VIEW: User Interface
+│       ├── base.html        # Layout หลัก
+│       ├── index.html       # หน้าแรก
+│       ├── profile.html     # โปรไฟล์
+│       ├── edit_profile.html # แก้ไขโปรไฟล์
+│       ├── *_dashboard.html # Dashboard แต่ละ Role
+│       ├── 📂 auth/         # หน้า Authentication
+│       └── 📂 jobs/         # หน้างานและใบสมัคร
+│
+├── 📄 app.py               # Entry Point
+├── 📄 extensions.py        # Flask Extensions
+├── 📄 requirements.txt     # Dependencies
+├── 📄 .gitignore          # Git Ignore Rules
+└── 📄 README.md           # คู่มือโปรเจกต์
+```
+
+---
+
+## 🛠️ เทคโนโลยีที่ใช้
+
+### Backend
+- **Python 3.8+**
+- **Flask 2.3.3** - Web Framework
+- **SQLAlchemy** - ORM Database
+- **Flask-Login** - User Session Management
+- **Werkzeug** - Password Hashing
+
+### Frontend  
+- **Bootstrap 5** - CSS Framework
+- **Font Awesome 6** - Icons
+- **Google Fonts** - Kanit + Sarabun
+- **Vanilla JavaScript** - Interactions
+
+### Database
+- **SQLite** - สำหรับ Development
+- **PostgreSQL/MySQL** - พร้อมสำหรับ Production
+
+---
+
+## 🚀 วิธีการติดตั้งและรัน
+
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/Jao07Nxne/MVC_1_68.git
+cd MVC_1_68
+```
+
+### 2️⃣ สร้าง Virtual Environment
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux  
+source venv/bin/activate
+```
+
+### 3️⃣ ติดตั้ง Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ รันระบบ
+```bash
+python app.py
+```
+
+### 5️⃣ เข้าใช้งานระบบ
+เปิด Browser ไปที่: **http://127.0.0.1:5000**
+
+---
+
+## 👤 บัญชีทดสอบ (Default Accounts)
+
+| บทบาท | Username | Password | คำอธิบาย |
+|--------|----------|----------|----------|
+| **Admin** | `admin` | `admin123` | ผู้ดูแลระบบ |
+| **Company** | `tech_hr` | `tech123` | บริษัท เทคโนโลยี |
+| **Company** | `finance_hr` | `finance123` | บริษัท การเงิน |
+| **User** | `somchai` | `pass123` | ผู้สมัครงาน (กำลังศึกษา) |
+| **User** | `supaporn` | `pass123` | ผู้สมัครงาน (จบแล้ว) |
+
+---
+
+## 📋 Routes หลัก
+
+### 🔐 Authentication (`/auth/*`)
+- `/auth/login` - เข้าสู่ระบบ
+- `/auth/logout` - ออกจากระบบ
+- `/auth/register` - สมัครสมาชิก
+
+### 🏠 Main Routes (`/`)
+- `/` - หน้าแรกแสดงตำแหน่งงาน
+- `/dashboard` - Dashboard (แยกตาม Role)
+- `/profile` - โปรไฟล์ผู้ใช้
+- `/profile/edit` - แก้ไขโปรไฟล์
+- `/admin/reports` - รายงานสถิติ (Admin)
+- `/admin/settings` - ตั้งค่าระบบ (Admin)
+
+### 💼 Job Routes (`/jobs/*`)
+- `/jobs/` - รายการตำแหน่งงาน
+- `/jobs/<job_id>` - รายละเอียดงาน
+- `/jobs/<job_id>/apply` - สมัครงาน
+- `/jobs/my_applications` - ใบสมัครของฉัน
+- `/jobs/company_applications` - ใบสมัครบริษัท
+
+---
+
+## 🗂️ ฐานข้อมูล (Database Schema)
+
+### 📊 Entity Relationship
+```
+👥 User (1) -----> (0,1) 👤 Candidate
+👥 User (1) -----> (0,1) 🏢 Company  
+🏢 Company (1) --> (0,*) 💼 Job
+👤 Candidate (1) -> (0,*) 📝 Application
+💼 Job (1) -------> (0,*) 📝 Application
+```
+
+### 🏷️ สถานะ (Status Values)
+- **Candidate Status**: `กำลังศึกษา`, `จบแล้ว`
+- **Job Type**: `งานปกติ`, `สหกิจศึกษา`
+- **Job Status**: `เปิด`, `ปิด`
+- **Application Status**: `รอดำเนินการ`, `อนุมัติ`, `ปฏิเสธ`
+
+---
+
+## 🚧 Roadmap การพัฒนา
+
+### ✅ Version 1.0 (Current)
+- ✅ ระบบ MVC Architecture
+- ✅ Multi-role Authentication  
+- ✅ Job Management System
+- ✅ Modern UI Design
+- ✅ ระบบโปรไฟล์ผู้ใช้
+
+### 🔄 Version 1.1 (Coming Soon)
+- 📁 File Upload for CV
+- 📧 Email Notifications
+- 🔍 Advanced Search & Filters
+- 📊 Report Export (PDF/Excel)
+- 🔐 Enhanced Security
+- 🌐 API Endpoints
+
+### 🚀 Version 2.0 (Future)
+- 💬 Real-time Chat System
+- 📱 Mobile App
+- 🤖 AI-powered Job Matching
+- 📈 Analytics Dashboard
+- 🌍 Multi-language Support
+
+---
+
+## 🤝 การมีส่วนร่วม (Contributing)
+
+1. **Fork** โปรเจกต์
+2. สร้าง **Feature Branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit** การเปลี่ยนแปลง (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** ไปยัง Branch (`git push origin feature/AmazingFeature`)
+5. สร้าง **Pull Request**
+
+---
+
+## 📄 License
+
+โปรเจกต์นี้ใช้ **MIT License** - ดูรายละเอียดในไฟล์ [LICENSE](LICENSE)
+
+---
+
+## 📞 ติดต่อ
+
+**Developer:** [Jao07Nxne](https://github.com/Jao07Nxne)  
+**Project Link:** [https://github.com/Jao07Nxne/MVC_1_68](https://github.com/Jao07Nxne/MVC_1_68)
+
+---
+
+## 🙏 Acknowledgments
+
+- [Flask Documentation](https://flask.palletsprojects.com/)
+- [Bootstrap 5](https://getbootstrap.com/)
+- [Font Awesome](https://fontawesome.com/)
+- [Google Fonts](https://fonts.google.com/)
+
+---
+
+**🎯 สร้างด้วย ❤️ สำหรับการศึกษาและพัฒนาทักษะ Web Development**
 │   │   └── job_controller.py     # จัดการงาน
 │   │
 │   ├── 📂 templates/        # VIEW: HTML Templates

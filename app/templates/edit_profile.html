@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}แก้ไขโปรไฟล์ - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-edit"></i> แก้ไขโปรไฟล์</h4>
+                </div>
+                
+                <form method="POST">
+                    <div class="card-body">
+                        <!-- แสดงข้อความ flash -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <div class="row mb-3">
+                            <label for="first_name" class="col-sm-3 col-form-label">
+                                <strong>ชื่อ: <span class="text-danger">*</span></strong>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="first_name" name="first_name" 
+                                       value="{{ user.first_name or '' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <label for="last_name" class="col-sm-3 col-form-label">
+                                <strong>นามสกุล: <span class="text-danger">*</span></strong>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="last_name" name="last_name" 
+                                       value="{{ user.last_name or '' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <label for="email" class="col-sm-3 col-form-label">
+                                <strong>อีเมล: <span class="text-danger">*</span></strong>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ user.email or '' }}" required>
+                            </div>
+                        </div>
+                        
+                        {% if user.candidate %}
+                        <div class="row mb-3">
+                            <label for="status" class="col-sm-3 col-form-label">
+                                <strong>สถานะ:</strong>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">- เลือกสถานะ -</option>
+                                    <option value="กำลังศึกษา" {% if user.candidate.status == 'กำลังศึกษา' %}selected{% endif %}>กำลังศึกษา</option>
+                                    <option value="จบแล้ว" {% if user.candidate.status == 'จบแล้ว' %}selected{% endif %}>จบแล้ว</option>
+                                </select>
+                                <small class="form-text text-muted">
+                                    กำลังศึกษา: สามารถสมัครงานสหกิจศึกษา | จบแล้ว: สามารถสมัครงานปกติ
+                                </small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <hr>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <strong>ชื่อผู้ใช้:</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                                <small class="form-text text-muted">ไม่สามารถเปลี่ยนแปลงได้</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <strong>บทบาท:</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" 
+                                       value="{% if user.user_type == 'admin' %}ผู้ดูแลระบบ{% elif user.user_type == 'company' %}บริษัท{% else %}ผู้ใช้ทั่วไป{% endif %}" 
+                                       disabled>
+                                <small class="form-text text-muted">ไม่สามารถเปลี่ยนแปลงได้</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('main.profile') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> ยกเลิก
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

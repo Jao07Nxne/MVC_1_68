@@ -27,8 +27,8 @@
             /* Modern UI Colors */
             --bg-primary: #ffffff;
             --bg-secondary: #f8f9fa;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
+            --text-primary: #000000;
+            --text-secondary: #000000;
             --border-color: #e2e8f0;
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -53,6 +53,22 @@
             font-family: 'Kanit', sans-serif;
             font-weight: 600;
             color: var(--text-primary);
+        }
+
+        /* Force all text to be black for better visibility */
+        p, span, div, li, td, th, label, .text-muted {
+            color: #000000 !important;
+        }
+
+        /* Ensure card text is black */
+        .card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6,
+        .card-body p, .card-body span, .card-body div {
+            color: #000000 !important;
+        }
+
+        /* Override specific problem areas while keeping navbar and buttons intact */
+        .card:not(.bg-primary):not(.bg-success):not(.bg-info):not(.bg-warning):not(.bg-danger) .text-white {
+            color: #000000 !important;
         }
 
         /* Custom Bootstrap Color Overrides */
@@ -479,6 +495,9 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}">
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.profile') }}">
+                                    <i class="fas fa-user-circle"></i> โปรไฟล์ของฉัน
                                 </a></li>
                                 {% if current_user.is_regular_user() %}
                                 <li><a class="dropdown-item" href="{{ url_for('jobs.my_applications') }}">
