@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}สมัครงาน - {{ job.job_title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">หน้าแรก</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('jobs.list_jobs') }}">ตำแหน่งงาน</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('jobs.job_detail', job_id=job.job_id) }}">{{ job.job_title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">สมัครงาน</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-paper-plane"></i> สมัครตำแหน่งงาน
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Job Summary -->
+                    <div class="alert alert-info">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="alert-heading">
+                                    <i class="fas fa-{{ 'briefcase' if job.job_type == 'งานปกติ' else 'graduation-cap' }}"></i>
+                                    {{ job.job_title }}
+                                </h5>
+                                <p class="mb-1">
+                                    <i class="fas fa-building"></i> {{ job.company.company_name }}
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-map-marker-alt"></i> {{ job.company.location }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <span class="badge bg-{{ 'success' if job.job_type == 'งานปกติ' else 'warning' }} fs-6">
+                                    {{ job.job_type }}
+                                </span>
+                                <p class="mb-0 mt-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> 
+                                        สมัครได้ถึง {{ job.application_deadline.strftime('%d/%m/%Y') }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Candidate Info -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-user text-primary"></i> ข้อมูลผู้สมัคร</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label"><strong>รหัสผู้สมัคร:</strong></label>
+                                    <p class="form-control-plaintext">{{ candidate.candidate_id }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><strong>ชื่อ-นามสกุล:</strong></label>
+                                    <p class="form-control-plaintext">{{ candidate.full_name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label"><strong>อีเมล:</strong></label>
+                                    <p class="form-control-plaintext">{{ candidate.email }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><strong>สถานะ:</strong></label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge bg-{{ 'info' if candidate.status == 'กำลังศึกษา' else 'success' }}">
+                                            {{ candidate.status }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Details -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-clock text-warning"></i> รายละเอียดการสมัคร</h5>
+                        <div class="bg-light p-3 rounded">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>วันที่สมัคร:</strong> {{ current_time.strftime('%d/%m/%Y') }}</p>
+                                    <p><strong>เวลาที่สมัคร:</strong> {{ current_time.strftime('%H:%M:%S') }} น.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>สถานะใบสมัคร:</strong> 
+                                        <span class="badge bg-info">รอพิจารณา</span>
+                                    </p>
+                                    <p class="mb-0"><strong>รหัสตำแหน่ง:</strong> {{ job.job_id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eligibility Check -->
+                    <div class="alert alert-success">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-check-circle"></i> ตรวจสอบสิทธิ์การสมัคร
+                        </h6>
+                        <p class="mb-0">
+                            {% if job.job_type == 'สหกิจศึกษา' %}
+                                ✅ คุณมีสิทธิ์สมัครสหกิจศึกษา (สถานะ: {{ candidate.status }})
+                            {% else %}
+                                ✅ คุณมีสิทธิ์สมัครงานปกติ (สถานะ: {{ candidate.status }})
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6><i class="fas fa-info-circle"></i> ข้อกำหนดและเงื่อนไข</h6>
+                            <ul class="mb-0">
+                                <li>การสมัครนี้ถือเป็นการยืนยันข้อมูลและความประสงค์ในการสมัครงาน</li>
+                                <li>บริษัทจะพิจารณาใบสมัครและติดต่อกลับในกรณีที่ผ่านการคัดเลือก</li>
+                                <li>หากพบข้อมูลเท็จ บริษัทมีสิทธิ์ยกเลิกการสมัครได้</li>
+                                <li>การสมัครแต่ละตำแหน่งสามารถทำได้เพียงครั้งเดียว</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Form -->
+                    <form method="POST" id="applicationForm">
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="confirmTerms" required>
+                            <label class="form-check-label" for="confirmTerms">
+                                <strong>ฉันยืนยันที่จะสมัครตำแหน่งนี้และยอมรับข้อกำหนดและเงื่อนไขทั้งหมด</strong>
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('jobs.job_detail', job_id=job.job_id) }}" 
+                               class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> ย้อนกลับ
+                            </a>
+                            <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                                <i class="fas fa-paper-plane"></i> ยืนยันการสมัคร
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enable/disable submit button based on checkbox
+document.getElementById('confirmTerms').addEventListener('change', function() {
+    document.getElementById('submitBtn').disabled = !this.checked;
+});
+
+// Form submission confirmation
+document.getElementById('applicationForm').addEventListener('submit', function(e) {
+    if (!confirm('คุณต้องการยืนยันการสมัครตำแหน่งนี้หรือไม่?\n\nการสมัครแต่ละตำแหน่งสามารถทำได้เพียงครั้งเดียว')) {
+        e.preventDefault();
+    }
+});
+
+// Auto-update time every second
+setInterval(function() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('th-TH');
+    const timeElements = document.querySelectorAll('.current-time');
+    timeElements.forEach(el => el.textContent = timeString);
+}, 1000);
+</script>
+{% endblock %}

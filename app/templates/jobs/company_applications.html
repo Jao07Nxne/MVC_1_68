@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}รายการผู้สมัครงาน - {{ company.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">หน้าแรก</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">รายการผู้สมัครงาน</li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1><i class="fas fa-users text-primary"></i> รายการผู้สมัครงาน</h1>
+                    <p class="text-muted mb-0">{{ company.company_name }}</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> กลับ Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if applications %}
+        <!-- สถิติการสมัคร -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|length }}</h3>
+                        <p class="mb-0">ใบสมัครทั้งหมด</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|selectattr('status', 'equalto', 'รอพิจารณา')|list|length }}</h3>
+                        <p class="mb-0">รอพิจารณา</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|selectattr('status', 'equalto', 'ผ่าน')|list|length }}</h3>
+                        <p class="mb-0">ผ่านการคัดเลือก</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|selectattr('status', 'equalto', 'ไม่ผ่าน')|list|length }}</h3>
+                        <p class="mb-0">ไม่ผ่านการคัดเลือก</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ตารางรายการผู้สมัคร -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-table"></i> รายการผู้สมัครทั้งหมด</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>วันที่สมัคร</th>
+                                        <th>ชื่อผู้สมัคร</th>
+                                        <th>อีเมล</th>
+                                        <th>ตำแหน่งงาน</th>
+                                        <th>ประเภท</th>
+                                        <th>สถานะการศึกษา</th>
+                                        <th>สถานะใบสมัคร</th>
+                                        <th>การดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>
+                                                <small>
+                                                    {{ application.application_date.strftime('%d/%m/%Y') }}<br>
+                                                    <span class="text-muted">{{ application.application_date.strftime('%H:%M น.') }}</span>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <strong>{{ application.candidate.first_name }} {{ application.candidate.last_name }}</strong><br>
+                                                <small class="text-muted">ID: {{ application.candidate.candidate_id }}</small>
+                                            </td>
+                                            <td>
+                                                <a href="mailto:{{ application.candidate.email }}" class="text-decoration-none">
+                                                    <i class="fas fa-envelope text-primary"></i>
+                                                    {{ application.candidate.email }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <strong>{{ application.job.job_title }}</strong><br>
+                                                <small class="text-muted">ID: {{ application.job.job_id }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if application.job.job_type == 'งานปกติ' else 'warning' }}">
+                                                    <i class="fas fa-{{ 'briefcase' if application.job.job_type == 'งานปกติ' else 'graduation-cap' }}"></i>
+                                                    {{ application.job.job_type }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'info' if application.candidate.status == 'กำลังศึกษา' else 'primary' }}">
+                                                    <i class="fas fa-{{ 'book' if application.candidate.status == 'กำลังศึกษา' else 'graduation-cap' }}"></i>
+                                                    {{ application.candidate.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{% if application.status == 'รอพิจารณา' %}warning{% elif application.status == 'ผ่าน' %}success{% elif application.status == 'ไม่ผ่าน' %}danger{% else %}secondary{% endif %} fs-6">
+                                                    {% if application.status == 'รอพิจารณา' %}
+                                                        <i class="fas fa-clock"></i>
+                                                    {% elif application.status == 'ผ่าน' %}
+                                                        <i class="fas fa-check-circle"></i>
+                                                    {% elif application.status == 'ไม่ผ่าน' %}
+                                                        <i class="fas fa-times-circle"></i>
+                                                    {% endif %}
+                                                    {{ application.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ url_for('jobs.application_detail', application_id=application.id) }}" 
+                                                       class="btn btn-sm btn-primary" 
+                                                       title="ดูรายละเอียด">
+                                                        <i class="fas fa-eye"></i> ดูรายละเอียด
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- ไม่มีผู้สมัคร -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+                        <h3>ยังไม่มีผู้สมัครงาน</h3>
+                        <p class="text-muted mb-4">
+                            ยังไม่มีใครสมัครงานในบริษัทของคุณ<br>
+                            ลองตรวจสอบประกาศรับสมัครงานหรือเผยแพร่ให้มากขึ้น
+                        </p>
+                        
+                        <div class="d-grid gap-2 d-md-block">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                                <i class="fas fa-tachometer-alt"></i> กลับ Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Tips สำหรับ HR -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> เคล็ดลับสำหรับ HR</h6>
+                    <ul class="mb-0">
+                        <li>คลิก "ดูรายละเอียด" เพื่อดูข้อมูลครบถ้วนและอัปเดตสถานะ</li>
+                        <li>ติดต่อผู้สมัครได้โดยตรงผ่านอีเมล</li>
+                        <li>ตรวจสอบความเหมาะสมระหว่างสถานะการศึกษาและประเภทงาน</li>
+                        <li>อัปเดตสถานะให้ผู้สมัครทราบผลการพิจารณา</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard แอดมิน - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-cogs text-danger"></i> Dashboard แอดมิน</h1>
+            <p class="text-muted">ยินดีต้อนรับ {{ current_user.username }} (ผู้ดูแลระบบ)</p>
+        </div>
+    </div>
+
+    <!-- System Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3>{{ stats.total_jobs }}</h3>
+                            <p class="mb-0">ตำแหน่งงานทั้งหมด</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-briefcase fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3>{{ stats.open_jobs }}</h3>
+                            <p class="mb-0">ตำแหน่งที่เปิดรับ</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-door-open fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3>{{ stats.total_companies }}</h3>
+                            <p class="mb-0">บริษัทในระบบ</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-building fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3>{{ stats.total_candidates }}</h3>
+                            <p class="mb-0">ผู้สมัครทั้งหมด</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-tools"></i> การจัดการระบบ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-eye fa-3x text-primary mb-3"></i>
+                                    <h6>ดูข้อมูลระบบ</h6>
+                                    <a href="{{ url_for('jobs.list_jobs') }}" class="btn btn-primary btn-sm">
+                                        ดูตำแหน่งงาน
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-bar fa-3x text-success mb-3"></i>
+                                    <h6>รายงานระบบ</h6>
+                                    <button class="btn btn-success btn-sm" disabled>
+                                        รายงานสถิติ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-cog fa-3x text-warning mb-3"></i>
+                                    <h6>ตั้งค่าระบบ</h6>
+                                    <button class="btn btn-warning btn-sm" disabled>
+                                        การตั้งค่า
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-info-circle"></i> ข้อมูลระบบ</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><strong>เวอร์ชันระบบ:</strong> 1.0.0</li>
+                        <li><strong>เฟรมเวิร์ก:</strong> Flask 2.3.3</li>
+                        <li><strong>ฐานข้อมูล:</strong> SQLite</li>
+                        <li><strong>สถานะ:</strong> <span class="badge bg-success">ออนไลน์</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-shield-alt"></i> ความปลอดภัย</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>หมายเหตุ:</strong> ระบบนี้เป็น Demo Version<br>
+                        ที่ใช้สำหรับการสอบ MVC เท่านั้น
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

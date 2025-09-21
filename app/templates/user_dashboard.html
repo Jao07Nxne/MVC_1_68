@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard ผู้ใช้ - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-tachometer-alt text-primary"></i> Dashboard ผู้ใช้</h1>
+            <p class="text-muted">ยินดีต้อนรับ {{ current_user.username }}!</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Stats -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ applications|length }}</h4>
+                            <p class="mb-0">ใบสมัครของฉัน</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-file-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ applications|selectattr('status', 'equalto', 'ผ่าน')|list|length }}</h4>
+                            <p class="mb-0">ผ่านการคัดเลือก</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ applications|selectattr('status', 'equalto', 'รอพิจารณา')|list|length }}</h4>
+                            <p class="mb-0">รอพิจารณา</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-rocket"></i> การดำเนินการด่วน</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('jobs.list_jobs') }}" class="btn btn-primary btn-block">
+                                <i class="fas fa-search"></i> ค้นหาตำแหน่งงาน
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('jobs.my_applications') }}" class="btn btn-info btn-block">
+                                <i class="fas fa-file-alt"></i> ดูใบสมัครของฉัน
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-history"></i> ใบสมัครล่าสุด</h5>
+                    {% if applications|length > 5 %}
+                        <a href="{{ url_for('jobs.my_applications') }}" class="btn btn-sm btn-outline-primary">
+                            ดูทั้งหมด
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ตำแหน่งงาน</th>
+                                        <th>บริษัท</th>
+                                        <th>วันที่สมัคร</th>
+                                        <th>สถานะ</th>
+                                        <th>การดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications[:5] %}
+                                        <tr>
+                                            <td>{{ application.job.job_title }}</td>
+                                            <td>{{ application.job.company.company_name }}</td>
+                                            <td>{{ application.application_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                                            <td>
+                                                <span class="badge bg-{% if application.status == 'รอพิจารณา' %}warning{% elif application.status == 'ผ่าน' %}success{% else %}danger{% endif %}">
+                                                    {{ application.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('jobs.job_detail', job_id=application.job.job_id) }}" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> ดู
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                            <h5>ยังไม่มีใบสมัคร</h5>
+                            <p class="text-muted">เริ่มต้นสมัครงานเพื่อดูประวัติการสมัครที่นี่</p>
+                            <a href="{{ url_for('jobs.list_jobs') }}" class="btn btn-primary">
+                                <i class="fas fa-search"></i> ค้นหางาน
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

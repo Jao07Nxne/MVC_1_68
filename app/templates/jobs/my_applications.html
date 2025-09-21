@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}ใบสมัครของฉัน - ระบบรับสมัครงาน{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">หน้าแรก</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">ใบสมัครของฉัน</li>
+                </ol>
+            </nav>
+            
+            <h1><i class="fas fa-file-alt text-primary"></i> ใบสมัครของฉัน</h1>
+            <p class="text-muted">ติดตามสถานะการสมัครงานทั้งหมดของคุณ</p>
+        </div>
+    </div>
+
+    {% if applications %}
+        <!-- Application Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|length }}</h3>
+                        <p class="mb-0">ใบสมัครทั้งหมด</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|selectattr('status', 'equalto', 'รอพิจารณา')|list|length }}</h3>
+                        <p class="mb-0">รอพิจารณา</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ applications|selectattr('status', 'equalto', 'ผ่าน')|list|length }}</h3>
+                        <p class="mb-0">ผ่านการคัดเลือก</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-list"></i> รายการใบสมัครทั้งหมด</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>วันที่สมัคร</th>
+                                        <th>ตำแหน่งงาน</th>
+                                        <th>บริษัท</th>
+                                        <th>ประเภท</th>
+                                        <th>สถานะ</th>
+                                        <th>วันสุดท้าย</th>
+                                        <th>การดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>
+                                                <small>
+                                                    {{ application.application_date.strftime('%d/%m/%Y') }}<br>
+                                                    <span class="text-muted">{{ application.application_date.strftime('%H:%M น.') }}</span>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <strong>{{ application.job.job_title }}</strong>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-building text-primary"></i>
+                                                {{ application.job.company.company_name }}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if application.job.job_type == 'งานปกติ' else 'warning' }}">
+                                                    <i class="fas fa-{{ 'briefcase' if application.job.job_type == 'งานปกติ' else 'graduation-cap' }}"></i>
+                                                    {{ application.job.job_type }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{% if application.status == 'รอพิจารณา' %}warning{% elif application.status == 'ผ่าน' %}success{% elif application.status == 'ไม่ผ่าน' %}danger{% else %}secondary{% endif %} fs-6">
+                                                    {% if application.status == 'รอพิจารณา' %}
+                                                        <i class="fas fa-clock"></i>
+                                                    {% elif application.status == 'ผ่าน' %}
+                                                        <i class="fas fa-check-circle"></i>
+                                                    {% elif application.status == 'ไม่ผ่าน' %}
+                                                        <i class="fas fa-times-circle"></i>
+                                                    {% endif %}
+                                                    {{ application.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small>
+                                                    {{ application.job.application_deadline.strftime('%d/%m/%Y') }}
+                                                    {% if application.job.application_deadline < application.application_date.date() %}
+                                                        <br><span class="text-danger">หมดเขต</span>
+                                                    {% endif %}
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ url_for('jobs.job_detail', job_id=application.job.job_id) }}" 
+                                                       class="btn btn-sm btn-outline-primary" 
+                                                       title="ดูรายละเอียดงาน">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-outline-info" 
+                                                            title="ติดต่อบริษัท" 
+                                                            onclick="window.location.href='mailto:{{ application.job.company.contact_email }}'">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- No Applications -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-folder-open fa-4x text-muted mb-4"></i>
+                        <h3>ยังไม่มีใบสมัคร</h3>
+                        <p class="text-muted mb-4">
+                            คุณยังไม่เคยสมัครตำแหน่งงานใดๆ<br>
+                            เริ่มต้นค้นหางานที่เหมาะกับคุณได้เลย!
+                        </p>
+                        
+                        <div class="d-grid gap-2 d-md-block">
+                            <a href="{{ url_for('jobs.list_jobs') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search"></i> ค้นหาตำแหน่งงาน
+                            </a>
+                            <a href="{{ url_for('jobs.list_jobs', type='internship') }}" class="btn btn-warning btn-lg">
+                                <i class="fas fa-graduation-cap"></i> ดูสหกิจศึกษา
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> เคล็ดลับ</h6>
+                    <ul class="mb-0">
+                        <li>ตรวจสอบสถานะใบสมัครของคุณเป็นประจำ</li>
+                        <li>ติดต่อบริษัทโดยตรงหากมีคำถามเพิ่มเติม</li>
+                        <li>เตรียมตัวให้พร้อมสำหรับการสัมภาษณ์</li>
+                        <li>อัปเดตข้อมูลส่วนตัวให้เป็นปัจจุบัน</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
